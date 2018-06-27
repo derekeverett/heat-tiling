@@ -19,7 +19,7 @@ int main(void)
   int steps = 100; //number of time steps
   int dimx = 256;
   int dimy = 256;
-  int dimz = 256;
+  int dimz = 128;
   float k = 1.0; //heat diffusion strength
   int dim = dimx * dimy * dimz;
   float *temp_old, *temp_new;
@@ -58,7 +58,7 @@ int main(void)
         for (int is_loc = 0; is_loc < tilesize; is_loc++)
         {
           //printf("is_loc : %d \n", is_loc);
-          int is_glb = is_loc + (num_tiles - 1) * tilesize; //the global index across all tiles
+          int is_glb = is_loc + itile * tilesize; //the global index across all tiles
           int xm = is_glb - xstride;
           int xp = is_glb + xstride;
           int ym = is_glb - ystride;
@@ -74,8 +74,6 @@ int main(void)
           if (zp > dimz - 1) zp -= zstride;
           //blending step
           temp_new[is_glb] = temp_old[is_glb] + k * ( temp_old[xm] + temp_old[xp] + temp_old[ym] + temp_old[yp] + temp_old[zm] + temp_old[zp] - 6.0 * temp_old[is_glb] );
-
-          //printf("here now");
         }
       }
 
